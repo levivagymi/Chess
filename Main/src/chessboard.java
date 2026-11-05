@@ -7,10 +7,11 @@ public class chessboard {
     private boolean whiteTurn;
     private HashMap<String, ArrayList<Integer>> Board;
 
-    public chessboard(int width, int height, boolean whiteTurn, HashMap<String, ArrayList<Piece>Pieces) {
+    public chessboard(int width, int height, boolean whiteTurn, ArrayList<Piece> Pieces) {
         setWidth(width);
         setHeight(height);
         setWhiteTurn(true);
+        setBoard(Pieces);
     }
 
     public int getWidth() {
@@ -41,7 +42,13 @@ public class chessboard {
         return Board;
     }
 
-    public void setBoard(HashMap<String, ArrayList<Integer>> board) {
-        Board = board;
+    public void setBoard(ArrayList<Piece> Pieces) {
+        this.Board = new HashMap<String, ArrayList<Integer>>();
+        for (int i = 0; i < Pieces.size(); i++) {
+            ArrayList<Integer> xy = new ArrayList<>();
+            xy.add(Pieces.get(i).getCurrentPositionX());
+            xy.add(Pieces.get(i).getCurrentPositionY());
+            Board.put(Pieces.get(i).getName(),xy);
+        }
     }
 }

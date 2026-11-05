@@ -1,13 +1,13 @@
 import java.util.ArrayList;
 
-public class Pieces {
+public class Piece {
     private ArrayList<ArrayList<Integer>> step;
     private int currentPositionX;
     private int currentPositionY;
     private String name;
     private boolean color;
 
-    public Pieces(ArrayList<ArrayList<Integer>> step, int currentPositionX, int currentPositionY, String name, boolean color) {
+    public Piece(ArrayList<ArrayList<Integer>> step, int currentPositionX, int currentPositionY, String name, boolean color) {
         setStep(step);
         setCurrentPositionX(currentPositionX);
         setCurrentPositionY(currentPositionY);
