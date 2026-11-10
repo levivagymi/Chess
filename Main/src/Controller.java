@@ -37,4 +37,8 @@ public class Controller {
     public static void Check(){
 
     }
+
+    public static void step(Piece piece, Chessboard ch){
+
+    }
 }

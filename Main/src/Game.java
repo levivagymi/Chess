@@ -42,7 +42,7 @@ public class Game extends JFrame {
                     public void mouseClicked(MouseEvent e) {
                         if (chessBoard.get(r).get(c)!=null){
                             Piece grabbedPiece = chessBoard.get(r).get(c);
-                            System.out.println(grabbedPiece.getName());
+
                         }
 
 
