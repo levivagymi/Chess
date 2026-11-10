@@ -4,7 +4,7 @@ import java.util.HashMap;
 public class Chessboard {
     private int width, height;
     private boolean whiteTurn;
-    private HashMap<String, ArrayList<ArrayList<Integer>>> Board;
+    private HashMap<String, ArrayList<Integer>> Board;
 
     public Chessboard(int width, int height, boolean whiteTurn, ArrayList<Piece> Pieces) {
         setWidth(width);
@@ -42,12 +42,12 @@ public class Chessboard {
     }
 
     public void setBoard(ArrayList<Piece> Pieces) {
-        this.Board = new HashMap<String, ArrayList<ArrayList<Integer>>>();
+        this.Board = new HashMap<String, ArrayList<Integer>>();
         for (int i = 0; i < Pieces.size(); i++) {
             ArrayList<Integer> xy = new ArrayList<>();
             xy.add(Pieces.get(i).getCurrentPositionX());
             xy.add(Pieces.get(i).getCurrentPositionY());
-            Board.put(Pieces.get(i).getName());
+            Board.put(Pieces.get(i).getName(),xy);
         }
     }
 
@@ -72,10 +72,9 @@ public class Chessboard {
         };
 
         for (String piece : pieces) {
-            for (int i = 0; i < getBoard().get(piece).size(); i++) {
-                int x = getBoard().get(piece).get(i)
-                int y =
-                        chessboard.get(y).set(x, piece);
+            for (int i = 1; i < getBoard().get(piece).size()-1; i+=2) {
+                int x = getBoard().get(piece).get(i-1);
+                int y = getBoard().get(piece).get(i);
             }
 
 
