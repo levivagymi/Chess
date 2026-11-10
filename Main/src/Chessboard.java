@@ -4,13 +4,12 @@ import java.util.HashMap;
 public class Chessboard {
     private int width, height;
     private boolean whiteTurn;
-    private HashMap<String, ArrayList<Integer>> boardMap;
 
     public Chessboard(int width, int height, ArrayList<ArrayList<Piece>> pieces) {
         setWidth(width);
         setHeight(height);
         setWhiteTurn(true);
-        setBoard(pieces);
+        drawChessBoard(pieces);
     }
 
     public int getWidth() {
@@ -37,62 +36,34 @@ public class Chessboard {
         this.whiteTurn = whiteTurn;
     }
 
-    public HashMap<String, ArrayList<Integer>> getBoard() {
-        return boardMap;
-    }
 
-    public void setBoard(ArrayList<ArrayList<Piece>> pieces) {
-        this.boardMap = new HashMap<>();
-        for (ArrayList<Piece> allPiece : pieces) {
-            for (Piece coloredPiece : allPiece) {
-                ArrayList<Integer> xy = boardMap.computeIfAbsent(coloredPiece.getName(), k -> new ArrayList<>());
-                xy.add(coloredPiece.getCurrentPositionX());
-                xy.add(coloredPiece.getCurrentPositionY());
-            }
-        }
-    }
 
-    public void drawChessBoard() {
-        ArrayList<ArrayList<String>> chessboardGrid = new ArrayList<>();
+
+    public ArrayList<ArrayList<Piece>> drawChessBoard(ArrayList<ArrayList<Piece>> pieces) {
+
+        ArrayList<ArrayList<Piece>> chessboardGrid = new ArrayList<>();
         for (int i = 0; i < getHeight(); i++) {
-            ArrayList<String> row = new ArrayList<>();
+            ArrayList<Piece> row = new ArrayList<>();
             for (int j = 0; j < getWidth(); j++) {
-                row.add(".");
+                row.add(null);
             }
             chessboardGrid.add(row);
         }
 
-        String[] pieces = {
-                "Pawn",
-                "Rook",
-                "Knight",
-                "Bishop",
-                "Queen",
-                "King"
-        };
 
-        for (String piece : pieces) {
-                ArrayList<Integer> coords = boardMap.get(piece);
-                if (coords != null) {
-                    for (int j = 0; j < coords.size(); j+=2) {
-                        int x = coords.get(j);
-                        int y = coords.get(j + 1);
-                        if (y >= 0 && y <= getHeight() && x >= 0 && x <= getWidth()) {
+        for (ArrayList<Piece> Allpiece : pieces) {
 
-                            String symbol = piece.substring(0, 1).toUpperCase();
-                            if (piece.endsWith("B")) {
-                                symbol = symbol.toLowerCase();
-                            }
-
-                            chessboardGrid.get(y-1).set(x-1, symbol);
-                        }
-
+            for (Piece piece:Allpiece){
+                int x = piece.getCurrentPositionX();
+                int y = piece.getCurrentPositionY();
+                if (y >= 0 && y <= getHeight() && x >= 0 && x <= getWidth()) {
+                    chessboardGrid.get(y-1).set(x-1, piece);
+                }
                 }
             }
-        }
 
-        for (ArrayList<String> row : chessboardGrid) {
-            System.out.println(row);
-        }
+
+
+        return chessboardGrid;
     }
 }

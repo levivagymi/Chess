@@ -38,7 +38,7 @@ public class Piece {
         this.name = name;
     }
 
-    public boolean isColor() {
+    public boolean isColorWhite() {
         return color;
     }
 
