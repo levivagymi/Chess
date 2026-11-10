@@ -12,6 +12,7 @@ public class Chessboard {
         drawChessBoard(pieces);
     }
 
+
     public int getWidth() {
         return width;
     }
@@ -52,7 +53,6 @@ public class Chessboard {
 
 
         for (ArrayList<Piece> Allpiece : pieces) {
-
             for (Piece piece:Allpiece){
                 int x = piece.getCurrentPositionX();
                 int y = piece.getCurrentPositionY();

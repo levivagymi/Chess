@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 
 public class Game extends JFrame {
-
+    private Controller controller = new Controller();
     private final int SIZE = 8;
     private final JPanel[][] squares = new JPanel[SIZE][SIZE];
 

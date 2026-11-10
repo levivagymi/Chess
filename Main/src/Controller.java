@@ -1,13 +1,10 @@
-public class Controller {
+import java.util.ArrayList;
 
+public class Controller{
     private Piece puppet;
-    private int stepX;
-    private int stepY;
+    private Chessboard setChessboard;
+    public Controller() {
 
-    public Controller(Piece puppet, int stepX, int setY) {
-        setPuppet(puppet);
-        setStepX(stepX);
-        setStepY(stepY);
     }
 
     public Piece getPuppet() {
@@ -18,27 +15,15 @@ public class Controller {
         this.puppet = puppet;
     }
 
-    public int getStepX() {
-        return stepX;
-    }
-
-    public void setStepX(int stepX) {
-        this.stepX = stepX;
-    }
-
-    public int getStepY() {
-        return stepY;
-    }
-
-    public void setStepY(int setY) {
-        this.stepY = stepY;
+    public void setChessboard(Chessboard ch) {
+        this.setChessboard = ch;
     }
 
     public static void Check(){
 
     }
 
-    public static void step(Piece piece, Chessboard ch){
+    public static void step(Chessboard ch){
 
     }
 }
