@@ -40,7 +40,11 @@ public class Game extends JFrame {
                 square.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        System.out.println("Kattintás! Oszlop: " + c + ", Sor: " + r);
+                        if (chessBoard.get(r).get(c)!=null){
+                            Piece grabbedPiece = chessBoard.get(r).get(c);
+                            System.out.println(grabbedPiece.getName());
+                        }
+
 
                     }
                 });
