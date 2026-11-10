@@ -1,27 +1,18 @@
 import java.util.ArrayList;
 
 public class Piece {
-    private ArrayList<ArrayList<Integer>> step;
     private int currentPositionX;
     private int currentPositionY;
     private String name;
     private boolean color;
 
-    public Piece(ArrayList<ArrayList<Integer>> step, int currentPositionX, int currentPositionY, String name, boolean color) {
-        setStep(step);
+    public Piece( int currentPositionX, int currentPositionY, String name, boolean color) {
         setCurrentPositionX(currentPositionX);
         setCurrentPositionY(currentPositionY);
         setName(name);
         setColor(color);
     }
 
-    public ArrayList<ArrayList<Integer>> getStep() {
-        return step;
-    }
-
-    public void setStep(ArrayList<ArrayList<Integer>> step) {
-        this.step = step;
-    }
 
     public int getCurrentPositionX() {
         return currentPositionX;

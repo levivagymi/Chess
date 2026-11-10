@@ -4,13 +4,13 @@ import java.util.HashMap;
 public class Chessboard {
     private int width, height;
     private boolean whiteTurn;
-    private HashMap<String, ArrayList<Integer>> Board;
+    private HashMap<String, ArrayList<Integer>> boardMap;
 
-    public Chessboard(int width, int height, boolean whiteTurn, ArrayList<Piece> Pieces) {
+    public Chessboard(int width, int height, ArrayList<ArrayList<Piece>> pieces) {
         setWidth(width);
         setHeight(height);
         setWhiteTurn(true);
-        setBoard(Pieces);
+        setBoard(pieces);
     }
 
     public int getWidth() {
@@ -38,50 +38,60 @@ public class Chessboard {
     }
 
     public HashMap<String, ArrayList<Integer>> getBoard() {
-        return Board;
+        return boardMap;
     }
 
-    public void setBoard(ArrayList<Piece> Pieces) {
-        this.Board = new HashMap<String, ArrayList<Integer>>();
-        for (int i = 0; i < Pieces.size(); i++) {
-            ArrayList<Integer> xy = new ArrayList<>();
-            xy.add(Pieces.get(i).getCurrentPositionX());
-            xy.add(Pieces.get(i).getCurrentPositionY());
-            Board.put(Pieces.get(i).getName(),xy);
+    public void setBoard(ArrayList<ArrayList<Piece>> pieces) {
+        this.boardMap = new HashMap<>();
+        for (ArrayList<Piece> allPiece : pieces) {
+            for (Piece coloredPiece : allPiece) {
+                ArrayList<Integer> xy = boardMap.computeIfAbsent(coloredPiece.getName(), k -> new ArrayList<>());
+                xy.add(coloredPiece.getCurrentPositionX());
+                xy.add(coloredPiece.getCurrentPositionY());
+            }
         }
     }
 
-
-    public void DrawChessBoard(HashMap<String, ArrayList<Integer>> Board) {
-        ArrayList<ArrayList<String>> chessboard = new ArrayList<>();
-
+    public void drawChessBoard() {
+        ArrayList<ArrayList<String>> chessboardGrid = new ArrayList<>();
         for (int i = 0; i < getHeight(); i++) {
-            chessboard.add(new ArrayList<>());
+            ArrayList<String> row = new ArrayList<>();
             for (int j = 0; j < getWidth(); j++) {
-                chessboard.get(i).add(" ");
+                row.add(".");
             }
+            chessboardGrid.add(row);
         }
 
         String[] pieces = {
-                "pawnW", "pawnB",
-                "rookW", "rookB",
-                "knightW", "knightB",
-                "bishopW", "bishopB",
-                "queenW", "queenB",
-                "kingW", "kingB"
+                "Pawn",
+                "Rook",
+                "Knight",
+                "Bishop",
+                "Queen",
+                "King"
         };
 
         for (String piece : pieces) {
-            for (int i = 1; i < getBoard().get(piece).size()-1; i+=2) {
-                int x = getBoard().get(piece).get(i-1);
-                int y = getBoard().get(piece).get(i);
+                ArrayList<Integer> coords = boardMap.get(piece);
+                if (coords != null) {
+                    for (int j = 0; j < coords.size(); j+=2) {
+                        int x = coords.get(j);
+                        int y = coords.get(j + 1);
+                        if (y >= 0 && y <= getHeight() && x >= 0 && x <= getWidth()) {
+
+                            String symbol = piece.substring(0, 1).toUpperCase();
+                            if (piece.endsWith("B")) {
+                                symbol = symbol.toLowerCase();
+                            }
+
+                            chessboardGrid.get(y-1).set(x-1, symbol);
+                        }
+
+                }
             }
-
-
-
         }
 
-        for (ArrayList<String> row : chessboard) {
+        for (ArrayList<String> row : chessboardGrid) {
             System.out.println(row);
         }
     }
