@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 
 public class Game extends JFrame {
-    private Controller controller = new Controller();
+    private Controller controller;
     private final int SIZE = 8;
     private final JPanel[][] squares = new JPanel[SIZE][SIZE];
 
@@ -37,11 +37,15 @@ public class Game extends JFrame {
                 }
                 final int r = row;
                 final int c = col;
+
+
                 square.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         if (chessBoard.get(r).get(c)!=null){
-                            Piece grabbedPiece = chessBoard.get(r).get(c);
+                            controller=new Controller();
+                            controller.setPuppet(chessBoard.get(r).get(c));
+                            controller.availableSteps(chessBoard);
 
                         }
 
@@ -61,6 +65,9 @@ public class Game extends JFrame {
             }
         }
     }
+
+
+
     public JLabel puppet(String name, boolean colorWhite){
         JLabel label = new JLabel("");
 
