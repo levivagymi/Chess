@@ -41,8 +41,8 @@ public class Chessboard {
 
 
     public ArrayList<ArrayList<Piece>> drawChessBoard(ArrayList<ArrayList<Piece>> pieces) {
-
         ArrayList<ArrayList<Piece>> chessboardGrid = new ArrayList<>();
+
         for (int i = 0; i < getHeight(); i++) {
             ArrayList<Piece> row = new ArrayList<>();
             for (int j = 0; j < getWidth(); j++) {
@@ -65,5 +65,6 @@ public class Chessboard {
 
 
         return chessboardGrid;
+
     }
 }

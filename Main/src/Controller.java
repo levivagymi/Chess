@@ -1,11 +1,10 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Controller{
+public class Controller {
     private Piece puppet;
-    private Chessboard setChessboard;
-    public Controller() {
 
+    public Controller() {
     }
 
     public Piece getPuppet() {
@@ -16,44 +15,70 @@ public class Controller{
         this.puppet = puppet;
     }
 
-    public void setChessboard(Chessboard ch) {
-        this.setChessboard = ch;
+    public static void Check() {
     }
 
-    public static void Check(){
+    public ArrayList<ArrayList<Piece>> step(ArrayList<ArrayList<Piece>> chessBoardTarget, List<Integer> target){
 
+        chessBoardTarget.get(puppet.getCurrentPositionX()).set(puppet.getCurrentPositionY(),null);
+        chessBoardTarget.get(target.getFirst()).set(target.getLast(), puppet);
+        puppet.setCurrentPositionX(target.getFirst());
+        puppet.setCurrentPositionY(target.getLast());
+        return chessBoardTarget;
     }
 
-    public void availableSteps(ArrayList<ArrayList<Piece>> chessBoard){
+    public ArrayList<List<Integer>> availableSteps(ArrayList<ArrayList<Piece>> chessBoard) {
         ArrayList<List<Integer>> availableStepCoords = new ArrayList<>();
         boolean isWhite = puppet.isColorWhite();
-        switch (puppet.getName()){
+        int x = puppet.getCurrentPositionX();
+        int y = puppet.getCurrentPositionY();
+        int[][] directions;
+
+        switch (puppet.getName()) {
             case "Pawn":
-                    if (puppet.getCurrentPositionY() == 7){
-                        availableStepCoords.add(List.of(puppet.getCurrentPositionX(),puppet.getCurrentPositionY()+2));
-                    }else {
-                        availableStepCoords.add(List.of(puppet.getCurrentPositionX(),puppet.getCurrentPositionY()+1));
+                if (x - 1 >= 1 && y - 1 >= 1) {
+                    Piece target = chessBoard.get(y - 2).get(x - 2);
+                    if (target != null && target.isColorWhite() != isWhite) {
+                        availableStepCoords.add(List.of(x - 1, y - 1));
                     }
+                }
+                if (x + 1 <= 8 && y - 1 >= 1) {
+                    Piece target = chessBoard.get(y - 2).get(x);
+                    if (target != null && target.isColorWhite() != isWhite) {
+                        availableStepCoords.add(List.of(x + 1, y - 1));
+                    }
+                }
+
+                if (y == 7) {
+                    if (y - 1 >= 1 && chessBoard.get(y - 2).get(x - 1) == null) {
+                        availableStepCoords.add(List.of(x, y - 1));
+                        if (y - 2 >= 1 && chessBoard.get(y - 3).get(x - 1) == null) {
+                            availableStepCoords.add(List.of(x, y - 2));
+                        }
+                    }
+                } else {
+                    if (y - 1 >= 1 && chessBoard.get(y - 2).get(x - 1) == null) {
+                        availableStepCoords.add(List.of(x, y - 1));
+                    }
+                }
                 break;
 
-
             case "Rook":
-
-                int[][] directions = {
-                        {1, 0},   // jobbra
-                        {-1, 0},  // balra
-                        {0, 1},   // le
-                        {0, -1}   // fel
+                directions = new int[][]{
+                        {1, 0},
+                        {-1, 0},
+                        {0, 1},
+                        {0, -1}
                 };
 
                 for (int[] dir : directions) {
                     int dx = dir[0];
                     int dy = dir[1];
-                    int currentX = puppet.getCurrentPositionX() + dx;
-                    int currentY = puppet.getCurrentPositionY() + dy;
+                    int currentX = x + dx;
+                    int currentY = y + dy;
 
-                    while (currentX >= 0 && currentX < 8 && currentY >= 0 && currentY < 8) {
-                        Piece targetPiece = chessBoard.get(currentX).get(currentY);
+                    while (currentX >= 1 && currentX <= 8 && currentY >= 1 && currentY <= 8) {
+                        Piece targetPiece = chessBoard.get(currentY - 1).get(currentX - 1);
                         if (targetPiece == null) {
                             availableStepCoords.add(List.of(currentX, currentY));
                         } else {
@@ -67,43 +92,105 @@ public class Controller{
                     }
                 }
                 break;
+
             case "Knight":
-
                 int[][] steps = {
-                        {puppet.getCurrentPositionX()+1, puppet.getCurrentPositionY()-2},   // jobbrafelnagy
-                        {puppet.getCurrentPositionX()+2, puppet.getCurrentPositionY()-1},   // jobbrafelkicsi
-                        {puppet.getCurrentPositionX()+1, puppet.getCurrentPositionY()+2},  // jobraleNagy
-                        {puppet.getCurrentPositionX()+2, puppet.getCurrentPositionY()+1},   //jobraleKicsi
-                        {puppet.getCurrentPositionX()-1, puppet.getCurrentPositionY()-2},   //balrafelNagy
-                        {puppet.getCurrentPositionX()-2, puppet.getCurrentPositionY()-1},   //balrafelKicsi
-                        {puppet.getCurrentPositionX()-1, puppet.getCurrentPositionY()+2},   //balraleNagy
-                        {puppet.getCurrentPositionX()-2, puppet.getCurrentPositionY()+1}    //balraleKicsi
-
+                        {x + 1, y - 2},
+                        {x + 2, y - 1},
+                        {x + 1, y + 2},
+                        {x + 2, y + 1},
+                        {x - 1, y - 2},
+                        {x - 2, y - 1},
+                        {x - 1, y + 2},
+                        {x - 2, y + 1}
                 };
-                for (int[] step : steps){
-                    if (step[0] > 0 && step[0] <=8 && step[1] > 0 && step[1] <= 8){
-                        Piece targetPiece = chessBoard.get(step[0]).get(step[1]);
-                        if (targetPiece == null){
-                            availableStepCoords.add(List.of(step[0],step[1]));
-                        }else {
+                for (int[] step : steps) {
+                    int stepX = step[0];
+                    int stepY = step[1];
+                    if (stepX >= 1 && stepX <= 8 && stepY >= 1 && stepY <= 8) {
+                        Piece targetPiece = chessBoard.get(stepY - 1).get(stepX - 1);
+                        if (targetPiece == null) {
+                            availableStepCoords.add(List.of(stepX, stepY));
+                        } else {
                             if (targetPiece.isColorWhite() != isWhite) {
-                                availableStepCoords.add(List.of(step[0],step[1]));
+                                availableStepCoords.add(List.of(stepX, stepY));
                             }
                         }
                     }
                 }
                 break;
+
             case "Bishop":
+                directions = new int[][]{
+                        {1, 1},
+                        {-1, -1},
+                        {1, -1},
+                        {-1, 1}
+                };
+
+                for (int[] dir : directions) {
+                    int dx = dir[0];
+                    int dy = dir[1];
+                    int currentX = x + dx;
+                    int currentY = y + dy;
+
+                    while (currentX >= 1 && currentX <= 8 && currentY >= 1 && currentY <= 8) {
+                        Piece targetPiece = chessBoard.get(currentY - 1).get(currentX - 1);
+                        if (targetPiece == null) {
+                            availableStepCoords.add(List.of(currentX, currentY));
+                        } else {
+                            if (targetPiece.isColorWhite() != isWhite) {
+                                availableStepCoords.add(List.of(currentX, currentY));
+                            }
+                            break;
+                        }
+                        currentX += dx;
+                        currentY += dy;
+                    }
+                }
                 break;
+
             case "Queen":
+                directions = new int[][]{
+                        {1, 1},
+                        {-1, -1},
+                        {1, -1},
+                        {-1, 1},
+                        {1, 0},
+                        {-1, 0},
+                        {0, 1},
+                        {0, -1}
+                };
+
+                for (int[] dir : directions) {
+                    int dx = dir[0];
+                    int dy = dir[1];
+                    int currentX = x + dx;
+                    int currentY = y + dy;
+
+                    while (currentX >= 1 && currentX <= 8 && currentY >= 1 && currentY <= 8) {
+                        Piece targetPiece = chessBoard.get(currentY - 1).get(currentX - 1);
+                        if (targetPiece == null) {
+                            availableStepCoords.add(List.of(currentX, currentY));
+                        } else {
+                            if (targetPiece.isColorWhite() != isWhite) {
+                                availableStepCoords.add(List.of(currentX, currentY));
+                            }
+                            break;
+                        }
+                        currentX += dx;
+                        currentY += dy;
+                    }
+                }
                 break;
+
             case "King":
                 break;
-
         }
+        return availableStepCoords;
     }
 
-    public void availableAttacks(ArrayList<ArrayList<Piece>> chessBoard){
+    public void availableAttacks(ArrayList<ArrayList<Piece>> chessBoard, List<Integer> target) {
 
     }
 }
