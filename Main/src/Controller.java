@@ -19,11 +19,18 @@ public class Controller {
     }
 
     public ArrayList<ArrayList<Piece>> step(ArrayList<ArrayList<Piece>> chessBoardTarget, List<Integer> target){
+        int targetY = target.getFirst();
+        int targetX = target.getLast();
 
-        chessBoardTarget.get(puppet.getCurrentPositionX()).set(puppet.getCurrentPositionY(),null);
-        chessBoardTarget.get(target.getFirst()).set(target.getLast(), puppet);
-        puppet.setCurrentPositionX(target.getFirst());
-        puppet.setCurrentPositionY(target.getLast());
+        int oldY = puppet.getCurrentPositionY();
+        int oldX = puppet.getCurrentPositionX();
+
+        chessBoardTarget.get(oldY - 1).set(oldX - 1, null);
+        chessBoardTarget.get(targetY - 1).set(targetX - 1, puppet);
+
+        puppet.setCurrentPositionX(targetX);
+        puppet.setCurrentPositionY(targetY);
+
         return chessBoardTarget;
     }
 
@@ -185,7 +192,22 @@ public class Controller {
                 break;
 
             case "King":
+                directions = new int[][]{
+                        {1, 1}, {-1, -1}, {1, -1}, {-1, 1},
+                        {1, 0}, {-1, 0}, {0, 1}, {0, -1}
+                };
+                for (int[] dir : directions) {
+                    int targetX = x + dir[0];
+                    int targetY = y + dir[1];
+                    if (targetX >= 1 && targetX <= 8 && targetY >= 1 && targetY <= 8) {
+                        Piece targetPiece = chessBoard.get(targetY - 1).get(targetX - 1);
+                        if (targetPiece == null || targetPiece.isColorWhite() != isWhite) {
+                            availableStepCoords.add(List.of(targetX, targetY));
+                        }
+                    }
+                }
                 break;
+
         }
         return availableStepCoords;
     }

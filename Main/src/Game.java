@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class Game extends JFrame {
     private final Color darkColor = new Color(181, 136, 99);
     private Chessboard ch = new Chessboard(8,8,pieces);
     private ArrayList<ArrayList<Piece>> chessBoard = new ArrayList<>();
+
     public Game(ArrayList<ArrayList<Piece>> pieces) {
         this.pieces = pieces;
         chessBoard = ch.drawChessBoard(pieces);
@@ -37,9 +39,7 @@ public class Game extends JFrame {
                 }
                 final int r = row;
                 final int c = col;
-
-
-                square.addMouseListener(new MouseAdapter() {
+                MouseAdapter ms = new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         if (chessBoard.get(r).get(c)!=null){
@@ -49,10 +49,10 @@ public class Game extends JFrame {
 
 
                         }
-
-
                     }
-                });
+                };
+                square.removeMouseListener(ms);
+                square.addMouseListener(ms);
 
                 squares[row][col] = square;
                 add(square);
@@ -76,10 +76,29 @@ public class Game extends JFrame {
                 } else {
                     square.setBackground(darkColor);
                 }
+                final int r = i;
+                final int c = j;
 
                 if (chessBoard.get(i).get(j) != null) {
                     square.add(puppet(chessBoard.get(i).get(j).getName(), chessBoard.get(i).get(j).isColorWhite()));
+                    MouseAdapter ms = new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            if (chessBoard.get(r).get(c)!=null){
+                                controller=new Controller();
+                                controller.setPuppet(chessBoard.get(r).get(c));
+                                drawAvailableSteps(controller.availableSteps(chessBoard));
+
+
+                            }
+                        }
+                    };
+                    square.removeMouseListener(ms);
+                    square.addMouseListener(ms);
+
                 }
+
+
 
                 square.revalidate();
                 square.repaint();
@@ -96,7 +115,7 @@ public class Game extends JFrame {
 
             JPanel targetSquare = this.squares[r][c];
             targetSquare.setLayout(new GridBagLayout());
-            System.out.println(controller.getPuppet());
+
 
             JLabel dotLabel = new JLabel("●");
             dotLabel.setFont(new Font("Serif", Font.BOLD, 20));
@@ -105,8 +124,6 @@ public class Game extends JFrame {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                         chessBoard = controller.step(chessBoard, List.of(r+1,c+1));
-                    System.out.println(chessBoard);
-                        chessBoard = ch.drawChessBoard(chessBoard);
                         refreshBoard();
 
 

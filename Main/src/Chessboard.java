@@ -56,8 +56,8 @@ public class Chessboard {
             for (Piece piece:Allpiece){
                 int x = piece.getCurrentPositionX();
                 int y = piece.getCurrentPositionY();
-                if (y >= 0 && y <= getHeight() && x >= 0 && x <= getWidth()) {
-                    chessboardGrid.get(y-1).set(x-1, piece);
+                if (y >= 1 && y <= getHeight() && x >= 1 && x <= getWidth()) {
+                    chessboardGrid.get(y - 1).set(x - 1, piece);
                 }
                 }
             }
