@@ -51,7 +51,6 @@ public class Game extends JFrame {
                         }
                     }
                 };
-                square.removeMouseListener(ms);
                 square.addMouseListener(ms);
 
                 squares[row][col] = square;
@@ -79,6 +78,10 @@ public class Game extends JFrame {
                 final int r = i;
                 final int c = j;
 
+                for (MouseListener ml : square.getMouseListeners()) {
+                    square.removeMouseListener(ml);
+                }
+
                 if (chessBoard.get(i).get(j) != null) {
                     square.add(puppet(chessBoard.get(i).get(j).getName(), chessBoard.get(i).get(j).isColorWhite()));
                     MouseAdapter ms = new MouseAdapter() {
@@ -93,7 +96,6 @@ public class Game extends JFrame {
                             }
                         }
                     };
-                    square.removeMouseListener(ms);
                     square.addMouseListener(ms);
 
                 }
