@@ -42,7 +42,7 @@ public class Game extends JFrame {
                 MouseAdapter ms = new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        if (chessBoard.get(r).get(c)!=null){
+                        if (chessBoard.get(r).get(c)!=null && chessBoard.get(r).get(c).isColorWhite() == ch.isWhiteTurn() ){
                             controller=new Controller();
                             controller.setPuppet(chessBoard.get(r).get(c));
                             drawAvailableSteps(controller.availableSteps(chessBoard));
@@ -82,12 +82,12 @@ public class Game extends JFrame {
                     square.removeMouseListener(ml);
                 }
 
-                if (chessBoard.get(i).get(j) != null) {
+                if (chessBoard.get(i).get(j) != null ) {
                     square.add(puppet(chessBoard.get(i).get(j).getName(), chessBoard.get(i).get(j).isColorWhite()));
                     MouseAdapter ms = new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
-                            if (chessBoard.get(r).get(c)!=null){
+                            if (chessBoard.get(r).get(c)!=null && chessBoard.get(r).get(c).isColorWhite() == ch.isWhiteTurn() ){
                                 controller=new Controller();
                                 controller.setPuppet(chessBoard.get(r).get(c));
                                 drawAvailableSteps(controller.availableSteps(chessBoard));
@@ -125,7 +125,7 @@ public class Game extends JFrame {
             targetSquare.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                        chessBoard = controller.step(chessBoard, List.of(r+1,c+1));
+                        chessBoard = controller.step(chessBoard, List.of(r+1,c+1), ch);
                         refreshBoard();
 
 

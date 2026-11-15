@@ -18,7 +18,7 @@ public class Controller {
     public static void Check() {
     }
 
-    public ArrayList<ArrayList<Piece>> step(ArrayList<ArrayList<Piece>> chessBoardTarget, List<Integer> target){
+    public ArrayList<ArrayList<Piece>> step(ArrayList<ArrayList<Piece>> chessBoardTarget, List<Integer> target, Chessboard ch){
         int targetY = target.getFirst();
         int targetX = target.getLast();
 
@@ -30,7 +30,7 @@ public class Controller {
 
         puppet.setCurrentPositionX(targetX);
         puppet.setCurrentPositionY(targetY);
-
+        ch.setWhiteTurn(!ch.isWhiteTurn());
         return chessBoardTarget;
     }
 
