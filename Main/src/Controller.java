@@ -39,6 +39,8 @@ public class Controller {
         boolean isWhite = puppet.isColorWhite();
         int x = puppet.getCurrentPositionX();
         int y = puppet.getCurrentPositionY();
+
+
         int[][] directions;
 
         switch (puppet.getName()) {
@@ -210,9 +212,5 @@ public class Controller {
 
         }
         return availableStepCoords;
-    }
-
-    public void availableAttacks(ArrayList<ArrayList<Piece>> chessBoard, List<Integer> target) {
-
     }
 }

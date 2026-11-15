@@ -1,17 +1,26 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Chessboard {
     private int width, height;
     private boolean whiteTurn;
+    private ArrayList<ArrayList<Piece>> chessboard;
 
     public Chessboard(int width, int height, ArrayList<ArrayList<Piece>> pieces) {
         setWidth(width);
         setHeight(height);
         setWhiteTurn(true);
-        drawChessBoard(pieces);
+        setChessboard(drawChessBoard(pieces));
+
     }
 
+
+    public ArrayList<ArrayList<Piece>> getChessboard() {
+        return chessboard;
+    }
+
+    public void setChessboard(ArrayList<ArrayList<Piece>> chessboard) {
+        this.chessboard = chessboard;
+    }
 
     public int getWidth() {
         return width;
@@ -66,5 +75,16 @@ public class Chessboard {
 
         return chessboardGrid;
 
+    }
+    public ArrayList<ArrayList<Piece>> flipBoard(){
+        ArrayList<ArrayList<Piece>> targetList = new ArrayList<>();
+        targetList = new ArrayList<>(getChessboard().reversed());
+        for (int i = 0; i < targetList.size(); i++) {
+            for (int j = 0; j < targetList.get(i).size(); j++) {
+                if (targetList.get(i).get(j)!= null)
+                    targetList.get(i).get(j).setCurrentPositionY(9-targetList.get(i).get(j).getCurrentPositionY());
+            }
+        }
+        return targetList;
     }
 }

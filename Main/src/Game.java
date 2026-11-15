@@ -14,12 +14,18 @@ public class Game extends JFrame {
     private final JPanel[][] squares = new JPanel[SIZE][SIZE];
     private final Color lightColor = new Color(240, 217, 181);
     private final Color darkColor = new Color(181, 136, 99);
-    private Chessboard ch = new Chessboard(8,8,pieces);
+    private Chessboard ch;
     private ArrayList<ArrayList<Piece>> chessBoard = new ArrayList<>();
 
     public Game(ArrayList<ArrayList<Piece>> pieces) {
         this.pieces = pieces;
-        chessBoard = ch.drawChessBoard(pieces);
+        ch = new Chessboard(8,8,pieces);
+        System.out.println(pieces);
+        System.out.println(ch.getChessboard());
+        chessBoard = ch.getChessboard();
+
+
+
         setTitle("Sakk");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,6 +70,7 @@ public class Game extends JFrame {
 
     }
     public void refreshBoard() {
+        chessBoard = ch.getChessboard();
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 JPanel square = squares[i][j];
@@ -71,9 +78,9 @@ public class Game extends JFrame {
 
 
                 if ((i + j) % 2 == 0) {
-                    square.setBackground(lightColor);
+                    square.setBackground(ch.isWhiteTurn()?lightColor:darkColor);
                 } else {
-                    square.setBackground(darkColor);
+                    square.setBackground(ch.isWhiteTurn()?darkColor:lightColor);
                 }
                 final int r = i;
                 final int c = j;
@@ -126,6 +133,8 @@ public class Game extends JFrame {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                         chessBoard = controller.step(chessBoard, List.of(r+1,c+1), ch);
+                        ch.setChessboard(chessBoard);
+                        ch.setChessboard(ch.flipBoard());
                         refreshBoard();
 
 
