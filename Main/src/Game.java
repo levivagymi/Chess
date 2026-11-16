@@ -132,14 +132,24 @@ public class Game extends JFrame {
             targetSquare.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                        chessBoard = controller.step(chessBoard, List.of(r+1,c+1));
-                        ch.setWhiteTurn(!ch.isWhiteTurn());
-                        ch.setChessboard(chessBoard);
-                        ch.setChessboard(ch.flipBoard());
+                    chessBoard = controller.step(chessBoard, List.of(r + 1, c + 1));
+                    ch.setChessboard(chessBoard);
+
+                    ch.setWhiteTurn(!ch.isWhiteTurn());
+                    ch.setChessboard(ch.flipBoard());
+
+                    Controller stateController = new Controller();
+                    int gameStatus = stateController.Check(ch);
+
+                    if (gameStatus == 2) {
                         refreshBoard();
+                        String winner = ch.isWhiteTurn() ? "Sötét" : "Világos";
+                        JOptionPane.showMessageDialog(null, "Sakk-matt! A győztes: " + winner, "Játék vége", JOptionPane.INFORMATION_MESSAGE);
+                    } else if (gameStatus == 1) {
+                        System.out.println("Sakk!");
+                    }
 
-
-
+                    refreshBoard();
                 }
             });
             targetSquare.add(dotLabel);

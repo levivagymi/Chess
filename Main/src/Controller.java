@@ -16,28 +16,61 @@ public class Controller {
     }
 
     public int Check(Chessboard chessboard) {
-        int isCheckOrCheckMate = 0;
-        Piece enemyKingPuppet = chessboard.getChessboard().stream().flatMap(List::stream).filter(item-> item != null && "King".equals(item.getName()) && item.isColorWhite() != chessboard.isWhiteTurn()).findFirst().orElse(null);
-        if (enemyKingPuppet == null) return 0;
+        boolean defendingColor = chessboard.isWhiteTurn();
+        boolean attackingColor = !defendingColor;
 
-        for (int i = 0; i < chessboard.getChessboard().size(); i++) {
-            for (int j = 0; j < chessboard.getChessboard().get(i).size(); j++) {
-                Piece p = chessboard.getChessboard().get(i).get(j);
-                if (p != null && p.isColorWhite() == chessboard.isWhiteTurn()) {
-                    ArrayList<List<Integer>> availableStepsforCurrentPuppet = availableSteps(chessboard.getChessboard(), p);
-                    for (int k = 0; k < availableStepsforCurrentPuppet.size(); k++) {
-                        if (availableStepsforCurrentPuppet.get(k).getFirst() == enemyKingPuppet.getCurrentPositionX() && availableStepsforCurrentPuppet.get(k).getLast() == enemyKingPuppet.getCurrentPositionY()){
-                            isCheckOrCheckMate = 1;
+
+        Piece defendingKing = chessboard.getChessboard().stream()
+                .flatMap(List::stream)
+                .filter(item -> item != null && "King".equals(item.getName()) && item.isColorWhite() == defendingColor)
+                .findFirst()
+                .orElse(null);
+
+        if (defendingKing == null) return 0;
+
+
+        boolean isKingInCheck = false;
+        for (ArrayList<Piece> row : chessboard.getChessboard()) {
+            for (Piece p : row) {
+                if (p != null && p.isColorWhite() == attackingColor) {
+                    ArrayList<List<Integer>> enemySteps = availableSteps(chessboard.getChessboard(), p);
+                    for (List<Integer> step : enemySteps) {
+                        if (step.getFirst() == defendingKing.getCurrentPositionX()
+                                && step.getLast() == defendingKing.getCurrentPositionY()) {
+                            isKingInCheck = true;
+                            break;
                         }
                     }
                 }
+                if (isKingInCheck) break;
             }
+            if (isKingInCheck) break;
         }
-        return isCheckOrCheckMate;
+
+        if (!isKingInCheck) {
+            return 0;
+        }
+
+        boolean hasAnyMove = false;
+        for (ArrayList<Piece> row : chessboard.getChessboard()) {
+            for (Piece p : row) {
+                if (p != null && p.isColorWhite() == defendingColor) {
+                    ArrayList<List<Integer>> legalSteps = getLegalAvailableSteps(chessboard.getChessboard(), p);
+                    if (!legalSteps.isEmpty()) {
+                        hasAnyMove = true;
+                        break;
+                    }
+                }
+            }
+            if (hasAnyMove) break;
+        }
+
+
+        return hasAnyMove ? 1 : 2;
     }
 
-    public Boolean isLegalMove(ArrayList<ArrayList<Piece>> chessBoard, List<Integer> targetCoord) {
-        boolean playerColor = puppet.isColorWhite();
+    public Boolean isLegalMove(ArrayList<ArrayList<Piece>> chessBoard, Piece fPiece, List<Integer> targetCoord) {
+        boolean playerColor = fPiece.isColorWhite();
         Piece king = chessBoard.stream()
                 .flatMap(List::stream)
                 .filter(item -> item != null && "King".equals(item.getName()) && item.isColorWhite() == playerColor)
@@ -46,18 +79,18 @@ public class Controller {
 
         if (king == null) return false;
 
-        int oldX = puppet.getCurrentPositionX();
-        int oldY = puppet.getCurrentPositionY();
-        int targetY = targetCoord.getFirst();
-        int targetX = targetCoord.getLast();
+        int oldX = fPiece.getCurrentPositionX();
+        int oldY = fPiece.getCurrentPositionY();
+
+        int targetX = targetCoord.getFirst();
+        int targetY = targetCoord.getLast();
 
         Piece targetPiece = chessBoard.get(targetY - 1).get(targetX - 1);
 
-
         chessBoard.get(oldY - 1).set(oldX - 1, null);
-        chessBoard.get(targetY - 1).set(targetX - 1, puppet);
-        puppet.setCurrentPositionX(targetX);
-        puppet.setCurrentPositionY(targetY);
+        chessBoard.get(targetY - 1).set(targetX - 1, fPiece);
+        fPiece.setCurrentPositionX(targetX);
+        fPiece.setCurrentPositionY(targetY);
 
         boolean inCheck = false;
         for (ArrayList<Piece> row : chessBoard) {
@@ -76,11 +109,10 @@ public class Controller {
             if (inCheck) break;
         }
 
-
         chessBoard.get(targetY - 1).set(targetX - 1, targetPiece);
-        chessBoard.get(oldY - 1).set(oldX - 1, puppet);
-        puppet.setCurrentPositionX(oldX);
-        puppet.setCurrentPositionY(oldY);
+        chessBoard.get(oldY - 1).set(oldX - 1, fPiece);
+        fPiece.setCurrentPositionX(oldX);
+        fPiece.setCurrentPositionY(oldY);
 
         return !inCheck;
     }
@@ -89,7 +121,7 @@ public class Controller {
         ArrayList<List<Integer>> rawSteps = availableSteps(chessBoard, fPiece);
         ArrayList<List<Integer>> legalSteps = new ArrayList<>();
         for (List<Integer> step : rawSteps) {
-            if (isLegalMove(chessBoard, step)) {
+            if (isLegalMove(chessBoard, fPiece, step)) {
                 legalSteps.add(step);
             }
         }
