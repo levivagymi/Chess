@@ -51,7 +51,7 @@ public class Game extends JFrame {
                         if (chessBoard.get(r).get(c)!=null && chessBoard.get(r).get(c).isColorWhite() == ch.isWhiteTurn() ){
                             controller=new Controller();
                             controller.setPuppet(chessBoard.get(r).get(c));
-                            drawAvailableSteps(controller.availableSteps(chessBoard));
+                            drawAvailableSteps(controller.getLegalAvailableSteps(chessBoard,chessBoard.get(r).get(c)));
 
 
                         }
@@ -97,7 +97,7 @@ public class Game extends JFrame {
                             if (chessBoard.get(r).get(c)!=null && chessBoard.get(r).get(c).isColorWhite() == ch.isWhiteTurn() ){
                                 controller=new Controller();
                                 controller.setPuppet(chessBoard.get(r).get(c));
-                                drawAvailableSteps(controller.availableSteps(chessBoard));
+                                drawAvailableSteps(controller.getLegalAvailableSteps(chessBoard,chessBoard.get(r).get(c)));
 
 
                             }
@@ -132,7 +132,8 @@ public class Game extends JFrame {
             targetSquare.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                        chessBoard = controller.step(chessBoard, List.of(r+1,c+1), ch);
+                        chessBoard = controller.step(chessBoard, List.of(r+1,c+1));
+                        ch.setWhiteTurn(!ch.isWhiteTurn());
                         ch.setChessboard(chessBoard);
                         ch.setChessboard(ch.flipBoard());
                         refreshBoard();
