@@ -20,8 +20,6 @@ public class Game extends JFrame {
     public Game(ArrayList<ArrayList<Piece>> pieces) {
         this.pieces = pieces;
         ch = new Chessboard(8,8,pieces);
-        System.out.println(pieces);
-        System.out.println(ch.getChessboard());
         chessBoard = ch.getChessboard();
 
 
