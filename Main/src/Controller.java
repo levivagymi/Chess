@@ -97,12 +97,21 @@ public class Controller {
             for (Piece p : row) {
                 if (p != null && p.isColorWhite() != playerColor) {
                     ArrayList<List<Integer>> enemySteps = availableSteps(chessBoard, p);
-                    for (List<Integer> stepCoord : enemySteps) {
-                        if (stepCoord.getFirst() == king.getCurrentPositionX() && stepCoord.getLast() == king.getCurrentPositionY()) {
+                    if (p.getName().equals("Pawn")){
+                        if (p.getCurrentPositionX()-1 == king.getCurrentPositionX() && p.getCurrentPositionY()+1 == king.getCurrentPositionY()
+                                || p.getCurrentPositionX()+1 == king.getCurrentPositionX() && p.getCurrentPositionY()+1 == king.getCurrentPositionY()){
                             inCheck = true;
                             break;
                         }
+                    }else{
+                        for (List<Integer> stepCoord : enemySteps) {
+                            if (stepCoord.getFirst() == king.getCurrentPositionX() && stepCoord.getLast() == king.getCurrentPositionY()) {
+                                inCheck = true;
+                                break;
+                            }
+                        }
                     }
+
                 }
                 if (inCheck) break;
             }
