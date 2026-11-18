@@ -436,6 +436,9 @@ public class Controller {
         getPuppet().setCurrentPositionX(targetX);
         getPuppet().setCurrentPositionY(targetY);
         getPuppet().setHasMoved(true);
+        if ("Pawn".equals(getPuppet().getName()) && targetY == 1) {
+            getPuppet().setName("Queen");
+        }
         if ("Pawn".equals(getPuppet().getName()) &&
                oldY - targetY == 2) {
 
