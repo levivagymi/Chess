@@ -5,7 +5,7 @@ public class Piece {
     private int currentPositionY;
     private String name;
     private boolean color;
-
+    private boolean hasMoved = false;
     public Piece( int currentPositionX, int currentPositionY, String name, boolean color) {
         setCurrentPositionX(currentPositionX);
         setCurrentPositionY(currentPositionY);
@@ -16,6 +16,13 @@ public class Piece {
 
     public int getCurrentPositionX() {
         return currentPositionX;
+    }
+    public boolean isHasMoved() {
+        return hasMoved;
+    }
+
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
     }
 
     public void setCurrentPositionX(int currentPositionX) {

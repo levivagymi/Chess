@@ -271,6 +271,66 @@ public class Controller {
                         }
                     }
                 }
+                if (!fPiece.isHasMoved()) {
+                    boolean kingInCheck = false;
+                    for (ArrayList<Piece> row : chessBoard) {
+                        for (Piece p : row) {
+                            if (p != null && p.isColorWhite() != isWhite && !"King".equals(p.getName())) {
+                                for (List<Integer> stepCoord : availableSteps(chessBoard, p)) {
+                                    if (stepCoord.getFirst() == x && stepCoord.getLast() == y) {
+                                        kingInCheck = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (!kingInCheck) {
+                        Piece rightRook = chessBoard.get(y - 1).get(7);
+                        if (rightRook != null && "Rook".equals(rightRook.getName()) && !rightRook.isHasMoved() &&
+                                chessBoard.get(y - 1).get(5) == null && chessBoard.get(y - 1).get(6) == null) {
+
+                            boolean pathBlocked = false;
+                            for (ArrayList<Piece> row : chessBoard) {
+                                for (Piece p : row) {
+                                    if (p != null && p.isColorWhite() != isWhite && !"King".equals(p.getName())) {
+                                        for (List<Integer> stepCoord : availableSteps(chessBoard, p)) {
+                                            if ((stepCoord.getFirst() == x + 1 && stepCoord.getLast() == y) ||
+                                                    (stepCoord.getFirst() == x + 2 && stepCoord.getLast() == y)) {
+                                                pathBlocked = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (!pathBlocked) {
+                                availableStepCoords.add(List.of(x + 2, y));
+                            }
+                        }
+
+                        Piece leftRook = chessBoard.get(y - 1).get(0);
+                        if (leftRook != null && "Rook".equals(leftRook.getName()) && !leftRook.isHasMoved() &&
+                                chessBoard.get(y - 1).get(1) == null && chessBoard.get(y - 1).get(2) == null && chessBoard.get(y - 1).get(3) == null) {
+
+                            boolean pathBlocked = false;
+                            for (ArrayList<Piece> row : chessBoard) {
+                                for (Piece p : row) {
+                                    if (p != null && p.isColorWhite() != isWhite && !"King".equals(p.getName())) {
+                                        for (List<Integer> stepCoord : availableSteps(chessBoard, p)) {
+                                            if ((stepCoord.getFirst() == x - 1 && stepCoord.getLast() == y) ||
+                                                    (stepCoord.getFirst() == x - 2 && stepCoord.getLast() == y)) {
+                                                pathBlocked = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (!pathBlocked) {
+                                availableStepCoords.add(List.of(x - 2, y));
+                            }
+                        }
+                    }
+                }
                 break;
         }
         return availableStepCoords;
@@ -283,11 +343,30 @@ public class Controller {
         int oldY = getPuppet().getCurrentPositionY();
         int oldX = getPuppet().getCurrentPositionX();
 
+        if ("King".equals(getPuppet().getName()) && Math.abs(targetX - oldX) == 2) {
+            if (targetX == oldX + 2) {
+                Piece rook = chessBoardTarget.get(oldY - 1).get(7);
+                chessBoardTarget.get(oldY - 1).set(7, null);
+                chessBoardTarget.get(oldY - 1).set(5, rook);
+                rook.setCurrentPositionX(6);
+                rook.setCurrentPositionY(oldY);
+                rook.setHasMoved(true);
+            } else if (targetX == oldX - 2) {
+                Piece rook = chessBoardTarget.get(oldY - 1).get(0);
+                chessBoardTarget.get(oldY - 1).set(0, null);
+                chessBoardTarget.get(oldY - 1).set(3, rook);
+                rook.setCurrentPositionX(4);
+                rook.setCurrentPositionY(oldY);
+                rook.setHasMoved(true);
+            }
+        }
+
         chessBoardTarget.get(oldY - 1).set(oldX - 1, null);
         chessBoardTarget.get(targetY - 1).set(targetX - 1, getPuppet());
 
         getPuppet().setCurrentPositionX(targetX);
         getPuppet().setCurrentPositionY(targetY);
+        getPuppet().setHasMoved(true);
 
         return chessBoardTarget;
     }
