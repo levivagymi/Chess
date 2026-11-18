@@ -19,7 +19,6 @@ public class Controller {
         boolean defendingColor = chessboard.isWhiteTurn();
         boolean attackingColor = !defendingColor;
 
-
         Piece defendingKing = chessboard.getChessboard().stream()
                 .flatMap(List::stream)
                 .filter(item -> item != null && "King".equals(item.getName()) && item.isColorWhite() == defendingColor)
@@ -28,12 +27,13 @@ public class Controller {
 
         if (defendingKing == null) return 0;
 
-
         boolean isKingInCheck = false;
+
         for (ArrayList<Piece> row : chessboard.getChessboard()) {
             for (Piece p : row) {
                 if (p != null && p.isColorWhite() == attackingColor) {
                     ArrayList<List<Integer>> enemySteps = availableSteps(chessboard.getChessboard(), p);
+
                     for (List<Integer> step : enemySteps) {
                         if (step.getFirst() == defendingKing.getCurrentPositionX()
                                 && step.getLast() == defendingKing.getCurrentPositionY()) {
@@ -42,31 +42,35 @@ public class Controller {
                         }
                     }
                 }
+
                 if (isKingInCheck) break;
             }
+
             if (isKingInCheck) break;
         }
 
-        if (!isKingInCheck) {
-            return 0;
-        }
-
         boolean hasAnyMove = false;
+
         for (ArrayList<Piece> row : chessboard.getChessboard()) {
             for (Piece p : row) {
                 if (p != null && p.isColorWhite() == defendingColor) {
                     ArrayList<List<Integer>> legalSteps = getLegalAvailableSteps(chessboard.getChessboard(), p);
+
                     if (!legalSteps.isEmpty()) {
                         hasAnyMove = true;
                         break;
                     }
                 }
             }
+
             if (hasAnyMove) break;
         }
 
+        if (!hasAnyMove) {
+            return isKingInCheck ? 2 : 3;
+        }
 
-        return hasAnyMove ? 1 : 2;
+        return isKingInCheck ? 1 : 0;
     }
 
     public Boolean isLegalMove(ArrayList<ArrayList<Piece>> chessBoard, Piece fPiece, List<Integer> targetCoord) {

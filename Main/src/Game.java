@@ -139,10 +139,24 @@ public class Game extends JFrame {
                     Controller stateController = new Controller();
                     int gameStatus = stateController.Check(ch);
 
+
                     if (gameStatus == 2) {
                         refreshBoard();
                         String winner = ch.isWhiteTurn() ? "Sötét" : "Világos";
-                        JOptionPane.showMessageDialog(null, "Sakk-matt! A győztes: " + winner, "Játék vége", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "Sakk-matt! A győztes: " + winner,
+                                "Játék vége",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                    } else if (gameStatus == 3) {
+                        refreshBoard();
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "Patthelyzet! A játszma döntetlennel végződött.",
+                                "Játék vége",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
                     } else if (gameStatus == 1) {
                         System.out.println("Sakk!");
                     }
