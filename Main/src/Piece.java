@@ -6,6 +6,7 @@ public class Piece {
     private String name;
     private boolean color;
     private boolean hasMoved = false;
+    private boolean enPassantVulnerable = false;
     public Piece( int currentPositionX, int currentPositionY, String name, boolean color) {
         setCurrentPositionX(currentPositionX);
         setCurrentPositionY(currentPositionY);
@@ -13,7 +14,13 @@ public class Piece {
         setColor(color);
     }
 
+    public boolean isEnPassantVulnerable() {
+        return enPassantVulnerable;
+    }
 
+    public void setEnPassantVulnerable(boolean enPassantVulnerable) {
+        this.enPassantVulnerable = enPassantVulnerable;
+    }
     public int getCurrentPositionX() {
         return currentPositionX;
     }

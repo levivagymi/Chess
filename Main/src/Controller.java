@@ -86,7 +86,24 @@ public class Controller {
         int targetY = targetCoord.getLast();
 
         Piece targetPiece = chessBoard.get(targetY - 1).get(targetX - 1);
+        Piece enPassantCaptured = null;
 
+        if ("Pawn".equals(fPiece.getName()) &&
+                targetPiece == null &&
+                oldX != targetX) {
+
+            enPassantCaptured = chessBoard.get(oldY - 1).get(targetX - 1);
+
+            if (enPassantCaptured != null &&
+                    "Pawn".equals(enPassantCaptured.getName()) &&
+                    enPassantCaptured.isColorWhite() != playerColor &&
+                    enPassantCaptured.isEnPassantVulnerable()) {
+
+                chessBoard.get(oldY - 1).set(targetX - 1, null);
+            } else {
+                enPassantCaptured = null;
+            }
+        }
         chessBoard.get(oldY - 1).set(oldX - 1, null);
         chessBoard.get(targetY - 1).set(targetX - 1, fPiece);
         fPiece.setCurrentPositionX(targetX);
@@ -120,6 +137,9 @@ public class Controller {
 
         chessBoard.get(targetY - 1).set(targetX - 1, targetPiece);
         chessBoard.get(oldY - 1).set(oldX - 1, fPiece);
+        if (enPassantCaptured != null) {
+            chessBoard.get(oldY - 1).set(targetX - 1, enPassantCaptured);
+        }
         fPiece.setCurrentPositionX(oldX);
         fPiece.setCurrentPositionY(oldY);
 
@@ -170,6 +190,30 @@ public class Controller {
                 } else {
                     if (y - 1 >= 1 && chessBoard.get(y - 2).get(x - 1) == null) {
                         availableStepCoords.add(List.of(x, y - 1));
+                    }
+                }
+                if (x - 1 >= 1) {
+                    Piece target = chessBoard.get(y - 1).get(x - 2);
+
+                    if (target != null &&
+                            "Pawn".equals(target.getName()) &&
+                            target.isColorWhite() != isWhite &&
+                            target.isEnPassantVulnerable()) {
+
+                        availableStepCoords.add(List.of(x - 1, y - 1));
+                    }
+                }
+
+
+                if (x + 1 <= 8) {
+                    Piece target = chessBoard.get(y - 1).get(x);
+
+                    if (target != null &&
+                            "Pawn".equals(target.getName()) &&
+                            target.isColorWhite() != isWhite &&
+                            target.isEnPassantVulnerable()) {
+
+                        availableStepCoords.add(List.of(x + 1, y - 1));
                     }
                 }
                 break;
@@ -293,7 +337,7 @@ public class Controller {
                             boolean pathBlocked = false;
                             for (ArrayList<Piece> row : chessBoard) {
                                 for (Piece p : row) {
-                                    if (p != null && p.isColorWhite() != isWhite && !"King".equals(p.getName())) {
+                                    if (p != null  && !"King".equals(p.getName())) {
                                         for (List<Integer> stepCoord : availableSteps(chessBoard, p)) {
                                             if ((stepCoord.getFirst() == x + 1 && stepCoord.getLast() == y) ||
                                                     (stepCoord.getFirst() == x + 2 && stepCoord.getLast() == y)) {
@@ -315,7 +359,7 @@ public class Controller {
                             boolean pathBlocked = false;
                             for (ArrayList<Piece> row : chessBoard) {
                                 for (Piece p : row) {
-                                    if (p != null && p.isColorWhite() != isWhite && !"King".equals(p.getName())) {
+                                    if (p != null  && !"King".equals(p.getName())) {
                                         for (List<Integer> stepCoord : availableSteps(chessBoard, p)) {
                                             if ((stepCoord.getFirst() == x - 1 && stepCoord.getLast() == y) ||
                                                     (stepCoord.getFirst() == x - 2 && stepCoord.getLast() == y)) {
@@ -342,7 +386,28 @@ public class Controller {
 
         int oldY = getPuppet().getCurrentPositionY();
         int oldX = getPuppet().getCurrentPositionX();
+        if ("Pawn".equals(getPuppet().getName()) &&
+                oldX != targetX &&
+                chessBoardTarget.get(targetY - 1).get(targetX - 1) == null) {
 
+            Piece capturedPawn = chessBoardTarget.get(oldY - 1).get(targetX - 1);
+
+            if (capturedPawn != null &&
+                    "Pawn".equals(capturedPawn.getName()) &&
+                    capturedPawn.isColorWhite() != getPuppet().isColorWhite() &&
+                    capturedPawn.isEnPassantVulnerable()) {
+
+                chessBoardTarget.get(oldY - 1).set(targetX - 1, null);
+            }
+        }
+
+        for (ArrayList<Piece> row : chessBoardTarget) {
+            for (Piece p : row) {
+                if (p != null) {
+                    p.setEnPassantVulnerable(false);
+                }
+            }
+        }
         if ("King".equals(getPuppet().getName()) && Math.abs(targetX - oldX) == 2) {
             if (targetX == oldX + 2) {
                 Piece rook = chessBoardTarget.get(oldY - 1).get(7);
@@ -367,7 +432,11 @@ public class Controller {
         getPuppet().setCurrentPositionX(targetX);
         getPuppet().setCurrentPositionY(targetY);
         getPuppet().setHasMoved(true);
+        if ("Pawn".equals(getPuppet().getName()) &&
+               oldY - targetY == 2) {
 
+            getPuppet().setEnPassantVulnerable(true);
+        }
         return chessBoardTarget;
     }
 }
