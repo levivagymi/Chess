@@ -14,7 +14,26 @@ public class Controller {
     public void setPuppet(Piece puppet) {
         this.puppet = puppet;
     }
+    public boolean isInsufficientMaterial(ArrayList<ArrayList<Piece>> board) {
+        ArrayList<Piece> pieces = new ArrayList<>();
 
+        for (ArrayList<Piece> row : board) {
+            for (Piece p : row) {
+                if (p != null && !p.getName().equals("King")) {
+                    pieces.add(p);
+                }
+            }
+        }
+
+        if (pieces.isEmpty()) return true;
+
+        if (pieces.size() == 1) {
+            return pieces.getFirst().getName().equals("Bishop")
+                    || pieces.getFirst().getName().equals("Knight");
+        }
+
+        return false;
+    }
     public int Check(Chessboard chessboard) {
         boolean defendingColor = chessboard.isWhiteTurn();
         boolean attackingColor = !defendingColor;
@@ -26,7 +45,7 @@ public class Controller {
                 .orElse(null);
 
         if (defendingKing == null) return 0;
-
+        if (isInsufficientMaterial(chessboard.getChessboard())) return 4;
         boolean isKingInCheck = false;
 
         for (ArrayList<Piece> row : chessboard.getChessboard()) {

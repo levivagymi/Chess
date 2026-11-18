@@ -160,6 +160,10 @@ public class Game extends JFrame {
                     } else if (gameStatus == 1) {
                         System.out.println("Sakk!");
                     }
+                    else if (gameStatus == 4) {
+                        JOptionPane.showMessageDialog(null,
+                                "Döntetlen! Elégtelen mattadó anyag.");
+                    }
 
                     refreshBoard();
                 }
