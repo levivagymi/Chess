@@ -19,6 +19,7 @@ public class Main {
         pieces.add(new ArrayList<>());
         try{
             File f = new File("pieces.txt");
+
             BufferedReader bf = new BufferedReader(new FileReader(f));
             bf.readLine();
             String sor = bf.readLine();

@@ -360,7 +360,7 @@ public class Controller {
                             boolean pathBlocked = false;
                             for (ArrayList<Piece> row : chessBoard) {
                                 for (Piece p : row) {
-                                    if (p != null  && !"King".equals(p.getName())) {
+                                    if (p != null && p.isColorWhite() != isWhite  && !"King".equals(p.getName())) {
                                         for (List<Integer> stepCoord : availableSteps(chessBoard, p)) {
                                             if ((stepCoord.getFirst() == x + 1 && stepCoord.getLast() == y) ||
                                                     (stepCoord.getFirst() == x + 2 && stepCoord.getLast() == y)) {
@@ -382,7 +382,7 @@ public class Controller {
                             boolean pathBlocked = false;
                             for (ArrayList<Piece> row : chessBoard) {
                                 for (Piece p : row) {
-                                    if (p != null  && !"King".equals(p.getName())) {
+                                    if (p != null && p.isColorWhite() != isWhite && !"King".equals(p.getName())) {
                                         for (List<Integer> stepCoord : availableSteps(chessBoard, p)) {
                                             if ((stepCoord.getFirst() == x - 1 && stepCoord.getLast() == y) ||
                                                     (stepCoord.getFirst() == x - 2 && stepCoord.getLast() == y)) {
